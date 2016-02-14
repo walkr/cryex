@@ -6,6 +6,6 @@ from .core import ExchangeError
 
 __author__ = 'Tony Walker'
 __email__ = 'walkr.walkr@gmail.com'
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 __all__ = ['Poloniex', 'Kraken', 'ExchangeError']

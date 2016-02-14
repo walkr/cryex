@@ -38,7 +38,7 @@ test_requirements = [
 
 setup(
     name='cryex',
-    version='0.1.0',
+    version='0.1.1',
     description="Clients for Ethereum cryptocurrency exchanges",
     long_description=read_long_description('README.md') + '\n\n' + history,
     author="Tony Walker",
