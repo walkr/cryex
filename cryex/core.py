@@ -34,6 +34,9 @@ class Poloniex(Exchange):
             'exchange': 'poloniex',
             'last': float(data['last']),
             'pair': pair,
+            'volume24h': float(data['quoteVolume']),
+            'high24h': float(data['high24hr']),
+            'low24h': float(data['low24hr']),
         }
 
 
@@ -60,6 +63,9 @@ class Kraken(Exchange):
             'exchange': 'kraken',
             'last': float(data['c'][0]),
             'pair': pair,
+            'volume24h': float(data['v'][1]),
+            'high24h': float(data['h'][1]),
+            'low24h': float(data['l'][1]),
         }
 
 

@@ -43,10 +43,12 @@ class TestCryex(unittest.TestCase):
 
     @load_ticker_data
     def test_tickers(self):
+        keys = ['last', 'pair', 'exchange', 'volume24h', 'low24h', 'high24h']
         for ex in [Poloniex(), Kraken()]:
             for pair in ['eth_usd', 'eth_btc', 'btc_usd']:
                 ticker_data = ex.ticker(pair)
-                self.assertIsNotNone(ticker_data['last'])
+                for key in keys:
+                    self.assertIsNotNone(ticker_data[key])
 
 
 if __name__ == '__main__':
