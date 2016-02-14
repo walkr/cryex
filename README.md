@@ -2,6 +2,7 @@
 
 Clients for various cryptocurrency exchanges.
 
+[![Build Status](https://travis-ci.org/walkr/cryex.svg?branch=master)](https://travis-ci.org/walkr/cryex)
 
 ### Exchanges supported:
 
