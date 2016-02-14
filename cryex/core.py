@@ -2,13 +2,17 @@
 import requests
 
 
+class ExchangeError(Exception):
+    pass
+
+
 class Exchange(object):
     PAIRS = {
         'eth_usd', 'eth_btc', 'btc_usd'}
 
     def validate_pair(self, pair):
         if pair not in self.PAIRS:
-            raise Exception('Invalid pair')
+            raise ExchangeError('Invalid pair')
 
 
 class Poloniex(Exchange):
@@ -67,9 +71,3 @@ class Kraken(Exchange):
             'high24h': float(data['h'][1]),
             'low24h': float(data['l'][1]),
         }
-
-
-if __name__ == '__main__':
-    for ex in [Poloniex(), Kraken()]:
-        for pair in ['eth_usd', 'eth_btc', 'btc_usd']:
-            print(ex.ticker(pair))

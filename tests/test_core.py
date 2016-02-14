@@ -12,7 +12,7 @@ import unittest
 import functools
 import requests_mock
 
-from cryex import Poloniex, Kraken
+from cryex import Poloniex, Kraken, ExchangeError
 
 
 def load_ticker_data(f):
@@ -24,7 +24,7 @@ def load_ticker_data(f):
                     'GET', 'https://poloniex.com/public?command=returnTicker', text=fh.read())
 
             with open('tests/data/kraken.ticker.json') as fh:
-                pairs = {'XETHZUSD', 'XETHXXBT', 'XXBTZUSD'}
+                pairs = Kraken.REPAIRS.values()
                 json_data = fh.read()
                 for pair in pairs:
                     m.register_uri(
@@ -50,6 +50,10 @@ class TestCryex(unittest.TestCase):
                 for key in keys:
                     self.assertIsNotNone(ticker_data[key])
 
+    def test_validate_pair(self):
+        c = Poloniex()
+        self.assertRaisesRegexp(
+            ExchangeError, 'Invalid pair', c.validate_pair, 'xyz')
 
 if __name__ == '__main__':
     import sys
