@@ -6,3 +6,7 @@ History
 ------------------
 
 * First release on PyPI.
+
+0.1.2
+
+* Return ticker values as `Decimal`
