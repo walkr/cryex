@@ -6,6 +6,6 @@ from .core import ClientError
 
 __author__ = 'Tony Walker'
 __email__ = 'walkr.walkr@gmail.com'
-__version__ = '0.1.1'
+__version__ = '0.1.5'
 
 __all__ = ['Poloniex', 'Kraken', 'ClientError']
