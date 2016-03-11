@@ -20,8 +20,18 @@ Clients for various cryptocurrency exchanges.
 ```python
 from cryex import Poloniex, Kraken
 
+
+# Public
 client = Poloniex()
-ticker_data = client.ticker('eth_btc')
+ticker_data = client.public.ticker('eth_btc')
+trades = client.public.trades('eth_btc')
+
+# Private
+client = Poloniex(key='your-key', secret='your-secret')
+bal = client.private.balances()
+bath_eth = client.private.balances('eth')
+
+client.private.buy('eth_btc', price, amount)
 
 print(ticker_data)
 ```
@@ -36,3 +46,10 @@ print(ticker_data)
     'pair': 'eth_btc'
 }
 ```
+
+
+### FAQ:
+
+* Why are you using namedtuple objects for asks, bids and public trades?
+  To save space.
+

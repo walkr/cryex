@@ -12,7 +12,8 @@ import unittest
 import functools
 import requests_mock
 
-from cryex import Poloniex, Kraken, ExchangeError
+from cryex import Poloniex, Kraken, ClientError
+from cryex.model import Ask, Bid, Trade
 
 
 def load_ticker_data(f):
@@ -23,12 +24,21 @@ def load_ticker_data(f):
                 m.register_uri(
                     'GET', 'https://poloniex.com/public?command=returnTicker', text=fh.read())
 
+            with open('tests/data/poloniex.trades.json') as fh:
+                m.register_uri(
+                    'GET', 'https://poloniex.com/public?returnTradeHistory&currencyPair=BTC_ETH', text=fh.read())
+
+            with open('tests/data/poloniex.depth.json') as fh:
+                m.register_uri(
+                    'GET', 'https://poloniex.com/public?command=returnOrderBook&currencyPair=BTC_ETH&depth=1000', text=fh.read())
+
             with open('tests/data/kraken.ticker.json') as fh:
                 pairs = Kraken.REPAIRS.values()
                 json_data = fh.read()
                 for pair in pairs:
-                    m.register_uri(
-                        'GET', 'https://api.kraken.com/0/public/Ticker?pair={}'.format(pair), text=json_data)
+                    url = 'https://api.kraken.com/0/public/Ticker?pair={}'.format(
+                        pair)
+                    m.register_uri('GET', url, text=json_data)
             f(*args, **kwargs)
     return wrapper
 
@@ -36,7 +46,7 @@ def load_ticker_data(f):
 class TestCryex(unittest.TestCase):
 
     def setUp(self):
-        pass
+        self.clients = [Poloniex(), Kraken()]
 
     def tearDown(self):
         pass
@@ -44,16 +54,28 @@ class TestCryex(unittest.TestCase):
     @load_ticker_data
     def test_tickers(self):
         keys = ['last', 'pair', 'exchange', 'volume24h', 'low24h', 'high24h']
-        for ex in [Poloniex(), Kraken()]:
-            for pair in ['eth_usd', 'eth_btc', 'btc_usd']:
-                ticker_data = ex.ticker(pair)
+        for client in self.clients:
+            pairs = [p for p in client.REPAIRS.keys() if '_' in p]
+            for pair in pairs:
+                ticker_data = client.public.ticker(pair)
                 for key in keys:
                     self.assertIsNotNone(ticker_data[key])
 
     def test_validate_pair(self):
-        c = Poloniex()
+        c = self.clients[0]
         self.assertRaisesRegexp(
-            ExchangeError, 'Invalid pair', c.validate_pair, 'xyz')
+            ClientError, 'Invalid pair', c.validate_pair, 'xyz')
+
+    def test_public_trades(self):
+        c = self.clients[0]
+        trades = c.public.trades('eth_btc')
+        self.assertIsInstance(trades[0], Trade)
+
+    def test_public_depth(self):
+        c = self.clients[0]
+        (asks, bids) = c.public.depth('eth_btc')
+        self.assertIsInstance(asks[0], Ask)
+        self.assertIsInstance(bids[0], Bid)
 
 if __name__ == '__main__':
     import sys

@@ -1,74 +1,81 @@
-# -*- coding: utf-8 -*-
-import requests
-from decimal import Decimal
-
-
-class ExchangeError(Exception):
+class ClientError(Exception):
     pass
 
 
-class Exchange(object):
-    PAIRS = {
-        'eth_usd', 'eth_btc', 'btc_usd'}
+class Client(object):
+    """ The client object """
 
-    def validate_pair(self, pair):
-        if pair not in self.PAIRS:
-            raise ExchangeError('Invalid pair')
+    PUBLIC = None   # Public API endpoint
+    PRIVATE = None  # Private API endpoint
+
+    # These are the normalized symbols.
+    # To must be remapped in your subclass, and turned
+    # into symbols specific to a particular exchange,
+    # such as XXBT for Bitcoin on Kraken.
+    NORMALIZED_SYMBOLS = {
+
+        # PAIRS
+        'eth_usd',
+        'eth_btc',
+        'btc_usd',
+        'str_btc',
+        'bts_btc',
+        'fct_btc',
+        'maid_btc',
+
+        # SYMBOLS
+        'maid',
+        'bts',
+        'fct',
+        'str',
+        'eth',
+        'btc',
+        'usd',
+    }
+
+    # Define this in your subclass
+    REPAIRS = {}
+
+    @classmethod
+    def validate_pair(cls, pair_or_symbol):
+        """ Validate a normalized pair/symbol """
+
+        if pair_or_symbol not in cls.NORMALIZED_SYMBOLS:
+            raise ClientError('Invalid pair/symbol')
+        if pair_or_symbol not in cls.REPAIRS:
+            raise ClientError(
+                'There is no remapping available for this symbol/pair.')
+
+    @classmethod
+    def repair(cls, pair):
+        cls.validate_pair(pair)
+        return cls.REPAIRS[pair]
 
 
-class Poloniex(Exchange):
-    """ Implementation for exchange: Poloniex """
-
-    URL = 'https://poloniex.com/public?command=returnTicker'
-
-    REPAIRS = {
-        'eth_usd': 'USDT_ETH',
-        'eth_btc': 'BTC_ETH',
-        'btc_usd': 'USDT_BTC'}
-
-    def __init__(self):
-        super(Poloniex, self).__init__()
+class Public(object):
+    """ Public API methods """
 
     def ticker(self, pair):
-        self.validate_pair(pair)
+        raise NotImplemented
 
-        new_pair = self.REPAIRS[pair]
-        data = requests.get(self.URL).json()[new_pair]
+    def depth(self, pair):
+        raise NotImplemented
 
-        return {
-            'exchange': 'poloniex',
-            'last': Decimal(data['last']),
-            'pair': pair,
-            'volume24h': Decimal(data['quoteVolume']),
-            'high24h': Decimal(data['high24hr']),
-            'low24h': Decimal(data['low24hr']),
-        }
+    def trades(self, pair):
+        raise NotImplemented
 
 
-class Kraken(Exchange):
-    """ Implementation for exchange: Kraken """
+class Private(object):
+    """ Private API methods """
 
-    URL = 'https://api.kraken.com/0/public/Ticker?pair={}'
+    def balances(self, symbol=None):
+        raise NotImplemented
 
-    REPAIRS = {
-        'eth_usd': 'XETHZUSD',
-        'eth_btc': 'XETHXXBT',
-        'btc_usd': 'XXBTZUSD'}
+    def buy(self, pair, price, amount):
+        raise NotImplemented
 
-    def __init__(self):
-        super(Kraken, self).__init__()
+    def sell(self, pair, price, amount):
+        raise NotImplemented
 
-    def ticker(self, pair):
-        self.validate_pair(pair)
-
-        new_pair = self.REPAIRS[pair]
-        url = self.URL.format(new_pair)
-        data = requests.get(url).json()['result'][new_pair]
-        return {
-            'exchange': 'kraken',
-            'last': Decimal(data['c'][0]),
-            'pair': pair,
-            'volume24h': Decimal(data['v'][1]),
-            'high24h': Decimal(data['h'][1]),
-            'low24h': Decimal(data['l'][1]),
-        }
+    def stop(self, order_number):
+        raise NotImplemented
