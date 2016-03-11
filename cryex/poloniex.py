@@ -25,11 +25,13 @@ class Poloniex(core.Client):
         'eth_btc': 'BTC_ETH',
         'btc_usd': 'USDT_BTC',
         'str_btc': 'BTC_STR',
+        'maid_btc': 'BTC_MAID',
 
         'str': 'STR',
         'eth': 'ETH',
         'btc': 'BTC',
         'usd': 'USDT',
+        'maid': 'MAID',
     }
 
     def __init__(self, key=None, secret=None):

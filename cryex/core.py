@@ -22,14 +22,18 @@ class Client(object):
         'bts_btc',
         'fct_btc',
         'maid_btc',
+        'dash_btc',
+        'ltc_btc',
 
         # SYMBOLS
+        'dash',
         'maid',
         'bts',
         'fct',
         'str',
         'eth',
         'btc',
+        'ltc',
         'usd',
     }
 
