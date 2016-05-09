@@ -138,7 +138,7 @@ class Poloniex(core.Client):
             headers = {'Key': self.key, 'Sign': sig}
 
             # Fetch and return json
-            res = requests.post(self.PRIVATE, params, headers=headers)
+            res = requests.post(Poloniex.PRIVATE, params, headers=headers)
             return res.json()
 
         # ############## COMMANDS ###################################
@@ -152,7 +152,7 @@ class Poloniex(core.Client):
             symbol    - return balance for that symbol (currency) """
 
             response = self.post({'command': 'returnBalances'})
-            return response[self.REPAIRS[symbol]] if symbol else response
+            return response[Poloniex.REPAIRS[symbol]] if symbol else response
 
         def buy(self, pair, price, amount):
             """ Launch a new buy order
@@ -163,7 +163,7 @@ class Poloniex(core.Client):
             price       - the price to pay
             amount      - the amount to trade """
 
-            new_pair = self.REPAIRS[pair]
+            new_pair = Poloniex.REPAIRS[pair]
             return self.post({
                 'command': 'buy', 'currencyPair': new_pair,
                 'rate': price, 'amount': amount
@@ -178,7 +178,7 @@ class Poloniex(core.Client):
             price       - the price to pay
             amount      - the amount to trade """
 
-            new_pair = self.REPAIRS[pair]
+            new_pair = Poloniex.REPAIRS[pair]
             return self.post({
                 'command': 'sell', 'currencyPair': new_pair,
                 'rate': price, 'amount': amount
