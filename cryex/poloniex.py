@@ -99,7 +99,10 @@ class Poloniex(core.Client):
             # ---
             return [new_trade(i) for i in data]
 
-            ##################################################
+        def currencies(self):
+            return [c for c in Poloniex.REPAIRS.keys() if '_' not in c]
+
+    ##################################################
 
     class Private(core.Private):
         """ Private API """

@@ -52,6 +52,9 @@ class Kraken(core.Client):
                 'low24h': Decimal(data['l'][1]),
             }
 
+        def currencies(self):
+            return [c for c in Kraken.REPAIRS.keys() if '_' not in c]
+
     ##################################################
 
     class Private(core.Private):

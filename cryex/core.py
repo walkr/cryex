@@ -48,6 +48,9 @@ class Public(object):
     def trades(self, pair):
         raise NotImplemented
 
+    def currencies(self):
+        raise NotImplemented
+
 
 class Private(object):
     """ Private API methods """

@@ -77,6 +77,12 @@ class TestCryex(unittest.TestCase):
         self.assertIsInstance(asks[0], Ask)
         self.assertIsInstance(bids[0], Bid)
 
+    def test_currencies(self):
+        for c in self.clients:
+            self.assertTrue('eth' in c.public.currencies())
+            self.assertTrue('eth' in c.public.currencies())
+
+
 if __name__ == '__main__':
     import sys
     sys.exit(unittest.main())
