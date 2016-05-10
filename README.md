@@ -25,6 +25,7 @@ from cryex import Poloniex, Kraken
 client = Poloniex()
 ticker_data = client.public.ticker('eth_btc')
 trades = client.public.trades('eth_btc')
+currencies = client.public.currencies()
 
 # Private
 client = Poloniex(key='your-key', secret='your-secret')
