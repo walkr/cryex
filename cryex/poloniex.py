@@ -13,6 +13,7 @@ import requests
 
 from cryex import core
 from cryex.model import Ask, Bid, Trade
+from cryex.coins.poloniex import POLONIEX_REPAIRS
 
 
 class Poloniex(core.Client):
@@ -20,19 +21,7 @@ class Poloniex(core.Client):
 
     PUBLIC = 'https://poloniex.com/public'
     PRIVATE = 'https://poloniex.com/tradingApi'
-    REPAIRS = {
-        'eth_usd': 'USDT_ETH',
-        'eth_btc': 'BTC_ETH',
-        'btc_usd': 'USDT_BTC',
-        'str_btc': 'BTC_STR',
-        'maid_btc': 'BTC_MAID',
-
-        'str': 'STR',
-        'eth': 'ETH',
-        'btc': 'BTC',
-        'usd': 'USDT',
-        'maid': 'MAID',
-    }
+    REPAIRS = POLONIEX_REPAIRS
 
     def __init__(self, key=None, secret=None):
         super(Poloniex, self).__init__()

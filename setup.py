@@ -45,7 +45,7 @@ setup(
     author_email='walkr.walkr@gmail.com',
     url='https://github.com/walkr/cryex',
     packages=[
-        'cryex',
+        'cryex', 'cryex.coins',
     ],
     package_dir={'cryex':
                  'cryex'},

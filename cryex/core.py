@@ -1,3 +1,6 @@
+from cryex.coins.poloniex import POLONIEX_REPAIRS
+
+
 class ClientError(Exception):
     pass
 
@@ -12,30 +15,7 @@ class Client(object):
     # To must be remapped in your subclass, and turned
     # into symbols specific to a particular exchange,
     # such as XXBT for Bitcoin on Kraken.
-    NORMALIZED_SYMBOLS = {
-
-        # PAIRS
-        'eth_usd',
-        'eth_btc',
-        'btc_usd',
-        'str_btc',
-        'bts_btc',
-        'fct_btc',
-        'maid_btc',
-        'dash_btc',
-        'ltc_btc',
-
-        # SYMBOLS
-        'dash',
-        'maid',
-        'bts',
-        'fct',
-        'str',
-        'eth',
-        'btc',
-        'ltc',
-        'usd',
-    }
+    NORMALIZED_SYMBOLS = POLONIEX_REPAIRS.keys()
 
     # Define this in your subclass
     REPAIRS = {}
