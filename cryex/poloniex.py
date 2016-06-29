@@ -34,14 +34,7 @@ class Poloniex(core.Client):
     class Public(core.Public):
         """ Public API """
 
-        def ticker(self, pair):
-            """ Return ticker """
-
-            new_pair = Poloniex.repair(pair)
-            args = urlencode({'command': 'returnTicker'})
-            url = Poloniex.PUBLIC + '?' + args
-            data = requests.get(url).json()[new_pair]
-
+        def _ticker(self, pair, data):
             return {
                 'exchange': 'poloniex',
                 'last': Decimal(data['last']),
@@ -50,6 +43,23 @@ class Poloniex(core.Client):
                 'high24h': Decimal(data['high24hr']),
                 'low24h': Decimal(data['low24hr']),
             }
+
+        def tickers(self):
+            """ Return all Poloniex's live tickers with non-normalized
+            pair names """
+            args = urlencode({'command': 'returnTicker'})
+            url = Poloniex.PUBLIC + '?' + args
+            return [self._ticker(pair.lower(), data)
+                    for pair, data in requests.get(url).json().items()]
+
+        def ticker(self, pair):
+            """ Return ticker with normalized pair name """
+
+            new_pair = Poloniex.repair(pair)
+            args = urlencode({'command': 'returnTicker'})
+            url = Poloniex.PUBLIC + '?' + args
+            data = requests.get(url).json()[new_pair]
+            return self._ticker(new_pair, data)
 
         def depth(self, pair, depth=1000):
             """ Return order book """
